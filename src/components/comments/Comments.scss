@@ -1,0 +1,80 @@
+.box-container.timeline {
+  height: 100%;
+}
+.posts-container {
+  max-height: 280px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.posts-container.timeline {
+  max-height: 100%;
+  height: calc(100% - 20px);
+}
+.post-bubble {
+  text-align: left;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  width: calc(100% - 10px);
+  position: relative;
+}
+
+.comment-container {
+  display: flex;
+  font-size: 12px;
+  width: calc(100% - 60px);
+  margin: 30px;
+  height: 80px;
+  img {
+    margin: 10px 10px 0 -20px;
+    height: 40px;
+    border-radius: 20px;
+  }
+}
+
+.post-bubble:before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 40px;
+  border-width: 20px 20px 0;
+  border-style: solid;
+  border-color: grey transparent;
+  display: block;
+  width: 0;
+}
+
+.post-bubble:after {
+  content: "";
+  position: absolute;
+  bottom: -17px;
+  left: 43px;
+  border-width: 17px 17px 0;
+  border-style: solid;
+  border-color: #fff transparent;
+  display: block;
+  width: 0;
+}
+.post-bubble.me:before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: calc(100% - 80px);
+  border-width: 20px 20px 0;
+  border-style: solid;
+  border-color: grey transparent;
+  display: block;
+  width: 0;
+}
+
+.post-bubble.me:after {
+  content: "";
+  position: absolute;
+  bottom: -17px;
+  left: calc(100% - 77px);
+  border-width: 17px 17px 0;
+  border-style: solid;
+  border-color: #fff transparent;
+  display: block;
+  width: 0;
+}

@@ -1,29 +1,48 @@
-import { User, UserLogin, UserUpdate } from '../../models/user';
-import { deleteUser, getUserById, getUsers, login as apiLogin, updateUser } from '../../services/api';
+import { Post, User, UserLogin } from '../../models/user';
+import { getUsers, login as apiLogin } from '../../services/api';
 import { ApiData } from '../../models/apiData';
 
-//Action Types
-export const ADD_USER_LIST = 'ADD_USER_LIST';
 export const SET_LOGGED_USER = 'SET_LOGGED_USER';
-export const SET_USER = 'SET_USER';
-
 export const SET_USER_LIST = 'SET_USER_LIST';
 export const ADD_USERS_SUCCESS = 'ADD_USERS_SUCCESS';
 export const ADD_USERS_STARTED = 'ADD_USERS_STARTED';
-export const GET_USER_STARTED = 'GET_USER_STARTED';
 export const ADD_USERS_FAILURE = 'ADD_USERS_FAILURE';
-export const GET_USER_FAILURE = 'GET_USER_FAILURE';
-export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const USER_LOGGED_SUCCESS = 'USER_LOGGED_SUCCESS';
 export const USER_LOGGED_FAILURE = 'USER_LOGGED_FAILURE';
-export const USER_UPDATED_SUCCESS = 'USER_UPDATED_SUCCESS';
-export const USER_UPDATED_FAILURE = 'USER_UPDATED_FAILURE';
-export const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
-export const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
+export const FOLLOW_USER = 'FOLLOW_USER';
+export const UNFOLLOW_USER = 'UNFOLLOW_USER';
+export const UPDATE_USER_LOGGED = 'UPDATE_USER_LOGGED';
+export const LOGOUT = 'LOGOUT';
+export const POST_COMMENT = 'POST_COMMENT';
+export const SET_USER_TIMELINE = 'SET_USER_TIMELINE';
 
-export const setUser = (user: User) => ({
-  type: SET_USER,
-  payload: user
+export const setUserTimeline = (user: User) => ({
+  type: SET_USER_TIMELINE,
+  payload: { user }
+});
+
+export const unfollow = (user: User) => ({
+  type: UNFOLLOW_USER,
+  payload: { user }
+});
+
+export const postComment = (post: Post) => ({
+  type: POST_COMMENT,
+  payload: { post }
+});
+
+export const followUser = (user: User) => ({
+  type: FOLLOW_USER,
+  payload: { user }
+});
+
+export const updateLoggedUser = (user: User) => ({
+  type: UPDATE_USER_LOGGED,
+  payload: { user }
+});
+
+export const logout = () => ({
+  type: LOGOUT
 });
 
 const setUsers = (users: User[], page: number | null) => ({
@@ -38,17 +57,8 @@ const addUsersSuccess = (apiData: ApiData) => ({
   }
 });
 
-const getUserSuccess = (data: User) => ({
-  type: GET_USER_SUCCESS,
-  payload: data
-});
-
 const addUsersStarted = () => ({
   type: ADD_USERS_STARTED
-});
-
-const getUserStarted = () => ({
-  type: GET_USER_STARTED
 });
 
 const addUsersFailure = (error: any) => ({
@@ -66,31 +76,7 @@ const userLoggedSuccess = (res: {token: string}) => ({
 });
 
 const userLoggedFailure = (error: any) => ({
-  type: ADD_USERS_FAILURE,
-  payload: {
-    error
-  }
-});
-
-const userUpdatedSuccess = (res: any) => ({
-  type: USER_UPDATED_SUCCESS,
-  payload: res
-});
-
-const userUpdatedFailure = (error: any) => ({
-  type: USER_UPDATED_FAILURE,
-  payload: {
-    error
-  }
-});
-
-const deleteUserSuccess = (res: any) => ({
-  type: DELETE_USER_SUCCESS,
-  payload: res
-});
-
-const deleteUserFailure = (error: any) => ({
-  type: DELETE_USER_FAILURE,
+  type: USER_LOGGED_FAILURE,
   payload: {
     error
   }
@@ -126,37 +112,4 @@ export const login = (user: UserLogin) =>
       });
   };
 
-export const setUserData = (id: number, user: UserUpdate) =>
-  (dispatch: (arg0: { type: string; payload?: any; }) => void) => {
-    updateUser(id, user)
-      .then((res: any) => {
-        dispatch(userUpdatedSuccess(res));
-      })
-      .catch((err) => {
-        dispatch(userUpdatedFailure(err.message));
-      });
-  };
 
-export const setDeleteUser = (id: number) =>
-  (dispatch: (arg0: { type: string; payload?: any; }) => void) => {
-    deleteUser(id)
-      .then((res: any) => {
-        dispatch(deleteUserSuccess(res));
-      })
-      .catch((err) => {
-        dispatch(deleteUserFailure(err.message));
-      });
-  };
-
-export const getUser = (id: number) =>
-  (dispatch: (arg0: { type: string; payload?: any; }) => void) => {
-    dispatch(getUserStarted());
-    getUserById(id)
-      .then((user: User) => {
-        dispatch(getUserSuccess(user));
-        dispatch(setUser(user));
-      })
-      .catch((err) => {
-        dispatch(addUsersFailure(err.message));
-      });
-  };

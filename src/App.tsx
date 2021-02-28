@@ -1,13 +1,12 @@
 import { BrowserRouter } from 'react-router-dom';
 import { Route } from 'react-router';
-import { User } from './models/user';
 import './App.scss';
 import React, { useEffect, useState } from 'react';
 import LoginContainer from './pages/login/LoginContainer';
 import { store } from './state/store';
-import HomeContainer from './pages/home/HomeContainer';
-import UserContainer from './pages/user/UserContainer';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import WallContainer from './pages/wall/WallContainer';
+import TimelineContainer from './pages/timeline/TimelineContainer';
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -83,31 +82,30 @@ interface Props {
 }
 
 function App(props: Props) {
-  const [token, setToken] = useState();
-  const [users, setUsers] = useState<User[]>();
-  props.onAddUsers();
+  const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
     const usersStore = store.getState().users.users;
-    if (usersStore && usersStore.length > 0 && JSON.stringify(usersStore) !== JSON.stringify(users)) {
-      setUsers(usersStore);
+    if (!usersStore || usersStore.length === 0) {
+      props.onAddUsers();
     }
+  });
+  store.subscribe(() => {
     if (token !== store.getState().users.token.token) {
       setToken(store.getState().users.token.token);
     }
   });
-  if (!token) {
-    return <BrowserRouter
-      basename={baseUrl}>
-      <LoginContainer setToken={setToken} />
-    </BrowserRouter>;
-
-  }
   return (
-    <BrowserRouter
-      basename={baseUrl}>
-      <Route exact={true} path='/' component={HomeContainer} />
-      <Route path='/user/:id' component={UserContainer} />
-    </BrowserRouter>
+    token || store.getState().users.token.token ?
+      <BrowserRouter
+        basename={baseUrl}>
+        <Route exact={true} path='/' component={WallContainer} />
+        <Route exact={true} path='/timeline' component={TimelineContainer} />
+      </BrowserRouter>
+      :
+      <BrowserRouter
+        basename={baseUrl}>
+        <LoginContainer />
+      </BrowserRouter>
   );
 }
 

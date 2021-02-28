@@ -1,13 +1,14 @@
 // import { Message } from '../../models/message';
 import { User } from '../../models/user';
-import { ADD_USERS_SUCCESS, SET_USER, SET_LOGGED_USER, ADD_USER_LIST, SET_USER_LIST, USER_LOGGED_SUCCESS, USER_LOGGED_FAILURE, USER_UPDATED_SUCCESS, DELETE_USER_SUCCESS, GET_USER_SUCCESS } from '../actions/userLIstActions';
+import { ADD_USERS_SUCCESS, SET_LOGGED_USER, SET_USER_LIST,
+  USER_LOGGED_SUCCESS, USER_LOGGED_FAILURE, FOLLOW_USER, UPDATE_USER_LOGGED, LOGOUT, UNFOLLOW_USER, POST_COMMENT, SET_USER_TIMELINE } from '../actions/userLIstActions';
 import { ApiData } from '../../models/apiData';
 
 export interface State {
-  selectedUser: User | null,
   loggedUser: User | null,
   users: User[],
   usersApiData: ApiData | null,
+  timelineUser: User | null,
   token: {
     token: string | null,
   }
@@ -20,8 +21,8 @@ type Action = {
 
 const initialState = {
   usersApiData: null,
-  selectedUser: null,
   loggedUser: null,
+  timelineUser: null,
   users: [],
   token: {
     token: null,
@@ -30,28 +31,62 @@ const initialState = {
 
 const userListReducer = (state: State = initialState, action: Action) => {
   switch (action.type) {
+  case SET_USER_TIMELINE:
+    return { ...state, timelineUser: state.users.find((user: User) => user.id === action.payload.user.id) };
   case SET_LOGGED_USER:
     return { ...state, loggedUser: state && state.users &&
       state.users.find((user) => user.email === action.payload.email) };
-  case ADD_USER_LIST:
-    return { ...state, users: state.users.concat(action.payload) };
   case SET_USER_LIST:
-    return { ...state, users: state && state.usersApiData && action.payload.page === state.usersApiData.page + 1 ?
-      state.users.concat(action.payload.users): action.payload.users };
-  case SET_USER:
-    return { ...state, selectedUser: action.payload };
-  case GET_USER_SUCCESS:
-    return { ...state, selectedUser: action.payload };
+    return { ...state, users: action.payload.users };
   case ADD_USERS_SUCCESS:
     return { ...state, usersApiData: action.payload };
   case USER_LOGGED_SUCCESS:
     return { ...state, token: action.payload };
   case USER_LOGGED_FAILURE:
-    return { ...state, token: null };
-  case USER_UPDATED_SUCCESS:
-    return { ...state, selectedUser: action.payload };
-  case DELETE_USER_SUCCESS:
-    return { ...state, selectedUser: null };
+    return { ...state, token: { token: null } };
+  case LOGOUT:
+    return { ...state, token: { token: null } };
+  case POST_COMMENT:
+    const usersUpdate = state.users.map((user: User) => {
+      if (state.loggedUser && user.id === state.loggedUser.id) {
+        return { ...user, posts: (user.posts ? user.posts.concat(action.payload.post) : [action.payload.post]) };
+      }
+      return user;
+    });
+    const loggedUserUpdate = { ...state.loggedUser, posts: state.loggedUser &&
+      state.loggedUser.posts ? state.loggedUser.posts.concat(action.payload.post) : [action.payload.post] };
+    return { ...state, users: usersUpdate, loggedUser: loggedUserUpdate };
+  case UPDATE_USER_LOGGED:
+    if (state.loggedUser?.following && state.loggedUser?.following.find((us: User) => us.id === action.payload.user.id)) {
+      return { ...state };
+    }
+    const userUpdated = state.loggedUser && state.loggedUser.following &&
+      state.loggedUser.id !== action.payload.user.id ?
+      state.loggedUser.following.concat(action.payload.user) :
+      (state.loggedUser && action.payload.user.id !== state.loggedUser.id ? [action.payload.user] : []);
+    return { ...state, loggedUser: { ...state.loggedUser, following: userUpdated } };
+  case FOLLOW_USER:
+    const users = state.users.map((user: User) => {
+      if (state.loggedUser && user.id === state.loggedUser.id &&
+        state.loggedUser.following && state.loggedUser.id !== action.payload.user.id &&
+        !state.loggedUser.following.find((us: User) => us.id === user.id)) {
+        return { ...user, following: user.following ? user.following.concat(action.payload.user) :
+          (action.payload.user.id !== user.id ? [action.payload.user] : []) };
+      }
+      return user;
+    });
+    return { ...state, users };
+  case UNFOLLOW_USER:
+    const followUsers = state.loggedUser && state.loggedUser.following &&
+      state.loggedUser.following.filter((user: User) => user.id !== action.payload.user.id);
+    const loggedUser = { ...state.loggedUser, following: followUsers };
+    const usersUpdated = state.users.map((user: User) => {
+      if (state.loggedUser && user.id === state.loggedUser.id) {
+        return { ...user, following: followUsers };
+      }
+      return user;
+    });
+    return { ...state, loggedUser, users: usersUpdated };
   default:
     return state;
   }

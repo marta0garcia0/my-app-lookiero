@@ -2,7 +2,6 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import './Login.scss';
 import { User } from '../../models/user';
-import PaginationContainer from '../../components/pagination/PaginationContainer';
 import { Button, GlobalStyle, List, Title } from '../../App';
 
 const Wrapper = styled.section`
@@ -31,7 +30,7 @@ const Input = styled.input`
   margin-bottom: 0.9rem;
   border-radius: 4px;
   outline: 0;
-  border: 1px solid rgba(245, 245, 245, 0.7);
+  border: 2px solid rgba(245, 245, 245, 0.7);
   font-size: 14px;
   transition: all 0.3s ease-out;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -43,7 +42,6 @@ const Input = styled.input`
 
 interface Props {
   onLogin: Function;
-  setToken: Function;
   users: User[];
 }
 
@@ -56,8 +54,6 @@ function Login(props: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     props.onLogin(loggedUser);
-    props.setToken();
-
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +69,6 @@ function Login(props: Props) {
           <Title>Select one of the available users:</Title>
           {props.users && Array.from(props.users).map((user: any) =>
             <div key={user.id} onClick={() => setLoggedUser({ ...loggedUser, email: user.email })}>{user.email}</div>)}
-          <PaginationContainer />
         </div>
       </List>
       <Wrapper>

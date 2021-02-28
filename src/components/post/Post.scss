@@ -1,0 +1,34 @@
+.post-container {
+  width: calc(100% - 60px);
+  margin: 20px 30px;
+  height: 80px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  input {
+    width: calc(100% - 200px);
+    position: absolute;
+    left: 32px;
+    border-radius: 5px;
+    height: 78px;
+    border: none;
+  }
+  input:focus {
+    outline: none;
+  }
+  ::-webkit-input-placeholder { /* Edge */
+    color: grey;
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: grey;
+  }
+  
+  ::placeholder {
+    color: grey;
+  }
+  button {
+    margin: 20px 10px;
+    position: relative;
+    float: right;
+  }
+}
