@@ -6,7 +6,29 @@ export const mockUsers: User[] = [
 		'email': 'george.bluth@reqres.in',
 		'firstName': 'George',
 		'lastName': 'Bluth',
-		'avatar': 'https://reqres.in/img/faces/1-image.jpg'
+		'avatar': 'https://reqres.in/img/faces/1-image.jpg',
+		'following': [
+			{
+				'id':2,
+				'email':'janet.weaver@reqres.in',
+				'firstName':'Janet',
+				'lastName':'Weaver',
+				'avatar':'https://reqres.in/img/faces/2-image.jpg'
+			},
+			{
+				'id':3,
+				'email':'emma.wong@reqres.in',
+				'firstName':'Emma',
+				'lastName':'Wong',
+				'avatar':'https://reqres.in/img/faces/3-image.jpg'
+			}
+		],
+		'posts': [
+			{
+				"date": new Date("2021-02-28T21:00:59.680Z"),
+				"text": "Hola texto"
+			}
+		]
 	},
 	{
 		'id':2,

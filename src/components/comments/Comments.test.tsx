@@ -1,18 +1,35 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Pagination from './Pagination';
-import { mount, configure } from 'enzyme';
-import { mockApiResponse } from '../../__mocks__/mockUsers';
+import { mount, configure, render } from 'enzyme';
+import { mockUsers } from '../../__mocks__/mockUsers';
+import Comments from './Comments';
 
 configure({adapter: new Adapter()});
 
-/** @test {Pagination Component} */
-describe('Pagination Component', () => {
+/** @test {Comments Component} */
+describe('Comments Component', () => {
 
-  it('should render without crashing', () => {
-    const usersApiData = mockApiResponse;
-    const wrapper = mount(<Pagination onAddUsers={() => {}}
-      usersApiData={usersApiData} isDisabled={false} />);
-      expect(wrapper.find('button')).toHaveLength(2);
-      expect(wrapper.text()).toContain('Page1of 2')
+  it('should render wall comments from an user with comments', () => {
+    const wrapper = mount(<Comments title={'Wall'}
+      users={mockUsers}
+      loggedUser={mockUsers[0]}
+      timelineUser={null} />);
+    expect(wrapper.text()).toContain('Wall')
+    expect(wrapper.text()).toContain('Hola texto')
+  });
+  it('should render timeline of the user with comments', () => {
+    const wrapper = render(<Comments title={'Timeline'}
+      users={mockUsers}
+      loggedUser={mockUsers[1]}
+      timelineUser={mockUsers[0]} />);
+    expect(wrapper.text()).toContain('Timeline')
+    expect(wrapper.text()).toContain('Hola texto')
+  });
+  it('should render timeline of the user without comments', () => {
+    const wrapper = render(<Comments title={'Timeline'}
+      users={mockUsers}
+      loggedUser={mockUsers[1]}
+      timelineUser={mockUsers[2]} />);
+    expect(wrapper.text()).toContain('Timeline')
+    expect(wrapper.text()).not.toContain('Hola texto')
   });
 });

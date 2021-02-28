@@ -16,7 +16,6 @@ const mapDispatchToProps = (dispatch: (arg0: any) => void) => {
   };
 };
 const mapStateToProps = (state: State) => ({
-  usersApiData: state.users && state.users.usersApiData,
   loggedUser: state.users && state.users.loggedUser,
 });
 export default connect(

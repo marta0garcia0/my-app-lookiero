@@ -62,7 +62,7 @@
   "env": {
     "es6": true
   },
-  "ignorePatterns": ["node_modules", "**/node_modules/*"],
+  "ignorePatterns": ["node_modules", "**/__mock__/**", "**/node_modules/*"],
   "rules": {
     "accessor-pairs": "off",
     "array-bracket-newline": "off",

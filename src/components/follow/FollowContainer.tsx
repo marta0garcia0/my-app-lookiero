@@ -18,7 +18,6 @@ const mapDispatchToProps = (dispatch: (arg0: any) => void) => {
   };
 };
 const mapStateToProps = (state: State) => ({
-  usersApiData: state.users && state.users.usersApiData,
   users: state.users && state.users.users,
   loggedUser: state.users && state.users.loggedUser,
 });

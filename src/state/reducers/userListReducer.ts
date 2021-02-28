@@ -7,7 +7,6 @@ import { ApiData } from '../../models/apiData';
 export interface State {
   loggedUser: User | null,
   users: User[],
-  usersApiData: ApiData | null,
   timelineUser: User | null,
   token: {
     token: string | null,
@@ -20,7 +19,6 @@ type Action = {
 }
 
 const initialState = {
-  usersApiData: null,
   loggedUser: null,
   timelineUser: null,
   users: [],
@@ -39,7 +37,7 @@ const userListReducer = (state: State = initialState, action: Action) => {
   case SET_USER_LIST:
     return { ...state, users: action.payload.users };
   case ADD_USERS_SUCCESS:
-    return { ...state, usersApiData: action.payload };
+    return { ...state };
   case USER_LOGGED_SUCCESS:
     return { ...state, token: action.payload };
   case USER_LOGGED_FAILURE:

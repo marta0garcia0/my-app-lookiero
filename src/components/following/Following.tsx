@@ -1,4 +1,3 @@
-import { ApiData } from '../../models/apiData';
 import { User } from '../../models/user';
 import './Following.scss';
 import { FaMinus, FaUser } from 'react-icons/fa';
@@ -6,7 +5,6 @@ import { FaMinus, FaUser } from 'react-icons/fa';
 interface Props {
   onUnfollow: Function;
   onSetUserTimeline: Function;
-  usersApiData?: ApiData | null;
   loggedUser: User | null;
   title?: string;
   user?: User | null;

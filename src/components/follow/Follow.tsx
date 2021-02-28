@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ApiData } from '../../models/apiData';
 import { FaSearch, FaPlus, FaUser } from 'react-icons/fa';
 import './Follow.scss';
 import { User } from '../../models/user';
@@ -9,7 +8,6 @@ interface Props {
   onUpdateLoggedUser: Function;
   onFollowUser: Function;
   onSetUserTimeline: Function;
-  usersApiData?: ApiData | null;
   users: User[] | null;
   loggedUser: User | null;
   history: any;

@@ -10,7 +10,7 @@ test('renders learn react link', () => {
 			<App onAddUsers={() => {}}/>
 		</Provider>
 	);
-  const title = wrapper.getByText(/List of users, click to see detail:/i);
+  const title = wrapper.getByText(/Select one of the available users:/i);
   expect(title).toBeInTheDocument();
 
 });
